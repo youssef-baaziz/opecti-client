@@ -12,6 +12,5 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/* @import '~bootstrap/scss/bootstrap'; */
+/* Removed commented-out imports for cleaner code */
 @import 'bootstrap/dist/css/bootstrap.min.css';
-/* @import "~bootstrap-icons/font/bootstrap-icons.css"; */
