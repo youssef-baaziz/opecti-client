@@ -9,13 +9,17 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'alert_id', 'content'];
+    protected $fillable = ['client_id', 'alert_id', 'content'];
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function client() {
+        return $this->belongsTo(Client::class);
     }
 
     public function alert() {
         return $this->belongsTo(Alert::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

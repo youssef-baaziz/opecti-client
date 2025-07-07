@@ -5,7 +5,9 @@
     <div class="modal-content">
       <div class="modal-header text-dark">
         <h5 class="modal-title" id="editUserModalLabel{{ $superadmin->id }}">Modifier un utilisateur</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="modal-body">
         <form action="{{ route('users.update', $superadmin->id) }}" method="POST">
@@ -29,6 +31,7 @@
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success btn-lg">Enregistrer</button>
+                <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">Annuler</button>
             </div>
         </form>
       </div>

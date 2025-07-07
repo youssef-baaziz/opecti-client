@@ -3,40 +3,87 @@
 
 @section('content')
 <div class="container">
-    <h2>Tableau de bord Client - Cyber Security Insights</h2>
 
     @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <div class="row mt-4">
-        <div class="col-md-6">
-            <h5 style="text-align: center;">📊 Area Chart - Threats Over Time</h5>
-                <svg id="chart1" width="700" height="300"></svg>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Area Chart - Threats Over Time</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                        <svg id="chart1" width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h5 style="text-align: center;">📊 Line Chart - Attack Vectors</h5>
-                <svg id="chart2" width="700" height="300"></svg>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-success">Line Chart - Attack Vectors</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                        <svg id="chart2" width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-md-6">
-            <h5 style="text-align: center;">📊 Histogram - Vulnerability Trends</h5>
-                <svg id="chart3" width="700" height="300"></svg>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-info">📊 Histogram - Vulnerability Trends</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                        <svg id="chart3" width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h5 style="text-align: center;">📊 Bar Chart - Incident Response Times</h5>
-                <svg id="chart4" width="700" height="300"></svg>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-warning">📊 Bar Chart - Incident Response Times</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                        <svg id="chart4" width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row mt-4">
-        <div class="col-md-6">
-            <h5 style="text-align: center;">📊 Stacked-to-Grouped Bars - Security Breaches</h5>
-                <svg id="chart5" width="700" height="300"></svg>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-danger">📊 Stacked-to-Grouped Bars - Security Breaches</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                        <svg id="chart5" width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h5 style="text-align: center;">📊 Candlestick Chart - User Awareness Levels</h5>
-                <svg id="chart6" width="700" height="300"></svg>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-dark">📊 Candlestick Chart - User Awareness Levels</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="position: relative; height:300px; width:100%;">
+                        <svg id="chart6" width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -114,25 +161,27 @@
             }
 
             const svg = d3.select(chart.id),
-                width = +svg.attr("width"),
-                height = +svg.attr("height"),
+                width = svg.node().parentNode.clientWidth,
+                height = svg.node().parentNode.clientHeight,
                 margin = { top: 40, right: 20, bottom: 50, left: 60 };
+
+            svg.selectAll("*").remove(); // Clear previous content
 
             if (chart.type === 'candlestick') {
                 const x = d3.scaleBand()
                     .domain(data.map(d => d.date))
-                    .range([0, width])
+                    .range([0, width - margin.left - margin.right])
                     .padding(0.3);
 
                 const y = d3.scaleLinear()
                     .domain([d3.min(data, d => d.low), d3.max(data, d => d.high)])
                     .nice()
-                    .range([height, 0]);
+                    .range([height - margin.top - margin.bottom, 0]);
 
                 const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
                 g.append("g")
-                    .attr("transform", `translate(0,${height})`)
+                    .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
                     .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %d")).tickValues(x.domain().filter((_, i) => i % 3 === 0)));
 
                 g.append("g")
@@ -160,7 +209,7 @@
                 const keys = ["A", "B", "C"];
                 const x0 = d3.scaleBand()
                     .domain(data.map(d => d.month))
-                    .rangeRound([margin.left, width - margin.right])
+                    .rangeRound([0, width - margin.left - margin.right])
                     .paddingInner(0.1);
 
                 const x1 = d3.scaleBand()
@@ -168,18 +217,19 @@
                     .rangeRound([0, x0.bandwidth()])
                     .padding(0.05);
 
-                const y = d3.scaleLinear().rangeRound([height - margin.bottom, margin.top]);
+                const y = d3.scaleLinear().rangeRound([height - margin.top - margin.bottom, 0]);
 
                 const color = d3.scaleOrdinal()
                     .domain(keys)
                     .range(["#6b486b", "#ff8c00", "#a05d56"]);
 
                 const stack = d3.stack().keys(keys);
-                svg.selectAll("*").remove();
                 const stackedData = stack(data);
                 y.domain([0, d3.max(data, d => keys.reduce((a, c) => a + d[c], 0))]);
 
-                svg.append("g")
+                const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+                g.append("g")
                     .selectAll("g")
                     .data(stackedData)
                     .join("g")
@@ -193,39 +243,39 @@
                     .attr("width", x0.bandwidth())
                     .attr("class", "bar");
 
-                svg.append("g")
-                    .attr("transform", `translate(0,${height - margin.bottom})`)
+                g.append("g")
+                    .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
                     .call(d3.axisBottom(x0))
                     .selectAll("text")
                     .attr("transform", "rotate(-40)")
                     .style("text-anchor", "end");
 
-                svg.append("g")
-                    .attr("transform", `translate(${margin.left},0)`)
+                g.append("g")
                     .call(d3.axisLeft(y));
             } else {
                 const x = d3.scaleBand()
                     .domain(data.map(d => d.month))
-                    .range([margin.left, width - margin.right])
+                    .range([0, width - margin.left - margin.right])
                     .padding(0.1);
 
                 const y = d3.scaleLinear()
                     .domain([0, d3.max(data, d => d.total)]).nice()
-                    .range([height - margin.bottom, margin.top]);
+                    .range([height - margin.top - margin.bottom, 0]);
 
-                svg.append("g")
-                    .attr("transform", `translate(0,${height - margin.bottom})`)
+                const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+                g.append("g")
+                    .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
                     .call(d3.axisBottom(x))
                     .selectAll("text")
                     .attr("transform", "rotate(-40)")
                     .style("text-anchor", "end");
 
-                svg.append("g")
-                    .attr("transform", `translate(${margin.left},0)`)
+                g.append("g")
                     .call(d3.axisLeft(y));
 
                 if (chart.type === 'bar') {
-                    svg.selectAll(".bar")
+                    g.selectAll(".bar")
                         .data(data)
                         .enter().append("rect")
                         .attr("class", "bar")
@@ -238,7 +288,7 @@
                         .x(d => x(d.month) + x.bandwidth() / 2)
                         .y(d => y(d.total));
 
-                    svg.append("path")
+                    g.append("path")
                         .datum(data)
                         .attr("fill", "none")
                         .attr("stroke", "steelblue")
@@ -250,7 +300,7 @@
                         .y0(y(0))
                         .y1(d => y(d.total));
 
-                    svg.append("path")
+                    g.append("path")
                         .datum(data)
                         .attr("fill", "steelblue")
                         .attr("d", area);

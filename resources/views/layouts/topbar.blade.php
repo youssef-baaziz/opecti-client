@@ -1,17 +1,70 @@
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-<header class="d-flex align-items-center bg-light shadow-sm p-3" style="width: calc(100% - 365px); position: fixed; top: 0; z-index: 1000; left: 365px;">
-    <div class="d-flex justify-content-end col dropdown">
-        <div class="d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-            <span class="fw-bold text-dark">{{ Auth::user()->name }}</span>
-            <img src="{{ asset('images/profile.png') }}" alt="Profile Picture" class="rounded-circle ms-3" width="40" height="40">
-        </div>
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
-        </ul>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
+    <!-- Sidebar Toggle (Topbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center btn btn-primary text-white" id="sidebarToggle">
+        <i class="fa fa-bars"></i>
     </div>
-</header>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb4f4M6X4k2z5h4g6z4t5h4g6z4t5h4g6z4t5h4g6z4t5h4g6" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9fX0r7x4f7h4g6z4t5h4g6z4t5h4g6z4t5h4g6z4t5h4g6z4t5h4g6" crossorigin="anonymous"></script>
+    <!-- Topbar Search -->
+    <form
+        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+
+        <div class="topbar-divider d-none d-sm-block"></div>
+
+        <!-- Nav Item - User Information -->
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                <img class="img-profile rounded-circle"
+                    src="{{ asset('sb-admin/img/undraw_profile.svg') }}">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Logout
+                </a>
+            </div>
+        </li>
+
+    </ul>
+
+</nav>
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login.html">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>

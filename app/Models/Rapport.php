@@ -13,11 +13,21 @@ class Rapport extends Model
         'file',
         'titre',
         'type',
-        'user_id',
+        'client_id',
     ];
 
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Client::class);
+    }
+
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class);
+    }
+
+    public function iocs()
+    {
+        return $this->hasMany(IOC::class);
     }
 }

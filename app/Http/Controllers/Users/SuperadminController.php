@@ -8,9 +8,17 @@ use Illuminate\Http\Request;
 
 class SuperadminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('email', 'like', '%' . $searchTerm . '%');
+        }
+
+        $users = $query->latest()->paginate(10);
         return view('superadmin.index', compact('users'));
     }
 
@@ -83,9 +91,8 @@ class SuperadminController extends Controller
         $query = $request->input('query');
         $users = User::where('name', 'LIKE', "%{$query}%")
             ->orWhere('email', 'LIKE', "%{$query}%")
-            ->get(); // Use get() instead of paginate() for AJAX
+            ->paginate(10); // Use get() instead of paginate()
 
-        // Return JSON response for AJAX requests
-        return response()->json($users);
+        return view('superadmin.index', compact('users'));
     }
 }

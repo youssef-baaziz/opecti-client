@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('rapports', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titre');
+            $table->string('title');
             $table->enum('type', ['mensuel', 'hebdomadaire']);
             $table->string('file');
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('client_id')->unsigned();
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->timestamps();
         });
     }

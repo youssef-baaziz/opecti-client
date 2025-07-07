@@ -1,11 +1,12 @@
 <!-- Start of Selection -->
 <!-- Modern Modal -->
-<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="createUserModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header text-dark">
         <h5 class="modal-title" id="createUserModalLabel">Créer un nouvel utilisateur</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
         </button>
       </div>
       <div class="modal-body">
@@ -24,7 +25,7 @@
                 <div class="input-group">
                     <input type="password" class="form-control" id="password" name="password" placeholder="Entrez le mot de passe" required>
                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                        <i class="bi bi-eye-slash"></i>
+                        <i class="fas fa-eye-slash"></i>
                     </button>
                 </div>
                 <script>
@@ -32,8 +33,26 @@
                         const passwordField = document.getElementById('password');
                         const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                         passwordField.setAttribute('type', passwordFieldType);
-                        this.querySelector('i').classList.toggle('bi-eye');
-                        this.querySelector('i').classList.toggle('bi-eye-slash');
+                        this.querySelector('i').classList.toggle('fa-eye');
+                        this.querySelector('i').classList.toggle('fa-eye-slash');
+                    });
+                </script>
+            </div>
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Confirmez le mot de passe</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirmez le mot de passe" required>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
+                <script>
+                    document.getElementById('togglePasswordConfirmation').addEventListener('click', function () {
+                        const passwordField = document.getElementById('password_confirmation');
+                        const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordField.setAttribute('type', passwordFieldType);
+                        this.querySelector('i').classList.toggle('fa-eye');
+                        this.querySelector('i').classList.toggle('fa-eye-slash');
                     });
                 </script>
             </div>
@@ -47,6 +66,7 @@
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success btn-lg">Enregistrer</button>
+                <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">Annuler</button>
             </div>
         </form>
       </div>

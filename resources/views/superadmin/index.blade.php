@@ -4,24 +4,48 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Gestion des Utilisateurs</h2>
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">
-            <i class="bi bi-plus-circle"></i> Ajouter un utilisateur
+        <button class="btn btn-success float-left" data-toggle="modal" data-target="#createUserModal">
+            <i class="fas fa-plus-circle"></i> Ajouter un utilisateur
         </button>
-        <div class="d-flex">
-            <input type="text" class="form-control me-2" id="searchUser" name="query" value="{{ request()->query('query') }}" placeholder="Rechercher un utilisateur">
-            <button type="button" class="btn btn-outline-primary" onclick="liveSearch()"><i class="bi bi-search"></i></button>
-        </div>
+        <form
+            class="d-none d-sm-inline-block form-inline ml-auto mr-md-0 my-4 my-md-0 mw-100 navbar-search float-right"
+            action="{{ route('users.index') }}" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control bg-white border-0 small" placeholder="Search for..."
+                    aria-label="Search" aria-describedby="basic-addon2" name="search" id="searchUser" value="{{ request('search') }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                    @if(request('search'))
+                    <a href="{{ route('users.index') }}" class="btn btn-secondary ml-2">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </form>
     </div>
     @include('superadmin.create')
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
     @endif
-
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        <table class="table table-bordered table-hover align-middle">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Nom</th>
@@ -37,11 +61,11 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role }}</td>
                     <td class="text-right">
-                        <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}">
-                            <i class="bi bi-pencil-square"></i> Modifier
+                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editUserModal{{ $user->id }}">
+                            <i class="fas fa-pencil-alt"></i> Modifier
                         </button>
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ $user->id }}">
-                            <i class="bi bi-trash"></i> Supprimer
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal{{ $user->id }}">
+                            <i class="fas fa-trash"></i> Supprimer
                         </button>
 
                         <!-- Delete Confirmation Modal -->
@@ -50,7 +74,9 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="deleteUserModalLabel{{ $user->id }}">Confirmer la suppression</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" aria-label="Close">
+                                            <i class="fas fa-times"></i>
+                                        </button>
                                     </div>
                                     <div class="modal-body">
                                         Êtes-vous sûr de vouloir supprimer cet utilisateur ?
@@ -81,90 +107,4 @@
         {{ $users->links('pagination::bootstrap-5') }}
     </div>
 </div>
-
-<script>
-    let debounceTimer;
-    const searchInput = document.getElementById('searchUser');
-    const userTableBody = document.getElementById('user-table-body');
-    const paginationLinks = document.getElementById('pagination-links');
-
-    searchInput.addEventListener('input', () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(liveSearch, 300);
-    });
-
-    async function liveSearch() {
-        const query = searchInput.value.trim();
-
-        try {
-            const response = await axios.get(`/api/users/search`, {
-                params: { query: query }
-            });
-
-            const users = response.data;
-
-            userTableBody.innerHTML = '';
-
-            if (users.length > 0) {
-                users.forEach(user => {
-                    const userRow = document.createElement('tr');
-                    userRow.innerHTML = `
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${user.role}</td>
-                        <td class="text-right">
-                            <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal${user.id}">
-                                <i class="bi bi-pencil-square"></i> Modifier
-                            </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal${user.id}">
-                                <i class="bi bi-trash"></i> Supprimer
-                            </button>
-                            <div class="modal fade" id="deleteUserModal${user.id}" tabindex="-1" aria-labelledby="deleteUserModalLabel${user.id}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteUserModalLabel${user.id}">Confirmer la suppression</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Êtes-vous sûr de vouloir supprimer cet utilisateur ?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <form action="/users/${user.id}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    `;
-                    userTableBody.appendChild(userRow);
-                });
-                paginationLinks.style.display = 'none';
-
-            } else {
-                userTableBody.innerHTML = `
-                    <tr id="no-users-row">
-                        <td colspan="4" class="text-center">Aucun utilisateur trouvé.</td>
-                    </tr>
-                `;
-                paginationLinks.style.display = query === '' ? 'flex' : 'none';
-            }
-        } catch (error) {
-            console.error('Error fetching search results:', error.message);
-            userTableBody.innerHTML = `
-                <tr id="error-row">
-                    <td colspan="4" class="text-center text-danger">Erreur lors du chargement des utilisateurs: ${error.message}</td>
-                </tr>
-            `;
-            if (query === '') {
-                paginationLinks.style.display = 'flex';
-            }
-        }
-    }
-</script>
 @endsection

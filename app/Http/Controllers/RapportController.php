@@ -4,22 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Rapport;
-use App\Models\User;
+use App\Models\Client;
 use Illuminate\Support\Facades\Storage;
 
 class RapportController extends Controller
 {
     public function index()
     {
-        $rapports = Rapport::with('user')->latest()->paginate(10);
-        $users = User::all();
-        return view('analyste.rapport.index', compact('rapports', 'users'));
+        $rapports = Rapport::with('client')->latest()->paginate(10);
+        $clients = Client::all();
+        return view('rapport.index', compact('rapports', 'clients'));
     }
 
     public function create()
     {
-        $users = User::all();
-        return view('analyste.rapport.create', compact('users'));
+        $clients = Client::all();
+        return view('rapport.create', compact('clients'));
     }
 
     public function store(Request $request)
@@ -28,7 +28,7 @@ class RapportController extends Controller
             'titre' => 'required|string|max:255',
             'type' => 'required|in:mensuel,hebdomadaire',
             'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
-            'user_id' => 'required|exists:users,id',
+            'client_id' => 'required|exists:clients,id',
         ]);
 
         $file = $request->file('file');
@@ -38,7 +38,7 @@ class RapportController extends Controller
         Rapport::create([
             'titre' => $request->titre,
             'type' => $request->type,
-            'user_id' => $request->user_id,
+            'client_id' => $request->client_id,
             'file' => $filePath,
         ]);
 
@@ -47,13 +47,13 @@ class RapportController extends Controller
 
     public function show(Rapport $rapport)
     {
-        return view('analyste.rapport.show', compact('rapport'));
+        return view('rapport.show', compact('rapport'));
     }
 
     public function edit(Rapport $rapport)
     {
-        $users = User::all();
-        return view('analyste.rapport.edit', compact('rapport', 'users'));
+        $clients = Client::all();
+        return view('rapport.edit', compact('rapport', 'clients'));
     }
 
     public function update(Request $request, Rapport $rapport)
@@ -62,7 +62,7 @@ class RapportController extends Controller
             'titre' => 'required|string|max:255',
             'type' => 'required|in:mensuel,hebdomadaire',
             'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
-            'user_id' => 'required|exists:users,id',
+            'client_id' => 'required|exists:clients,id',
         ]);
 
         if ($request->hasFile('file')) {
@@ -74,7 +74,7 @@ class RapportController extends Controller
 
         $rapport->titre = $request->titre;
         $rapport->type = $request->type;
-        $rapport->user_id = $request->user_id;
+        $rapport->client_id = $request->client_id;
         $rapport->save();
 
         return redirect()->route('rapports.index')->with('success', 'Rapport mis à jour avec succès.');
@@ -104,7 +104,7 @@ class RapportController extends Controller
 
         $rapports = Rapport::where('titre', 'LIKE', "%{$query}%")
             ->orWhere('type', 'LIKE', "%{$query}%")
-            ->orWhere('user_id', 'LIKE', "%{$query}%")
+            ->orWhere('client_id', 'LIKE', "%{$query}%")
             ->orWhere('file', 'LIKE', "%{$query}%")
             ->get();
 
